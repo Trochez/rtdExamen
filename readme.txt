@@ -33,7 +33,9 @@ nombre con el que desea guardar y presione guardar. Para guardar un resultado
 debe haber realizado una consulta previa
 
 -Ver Hoja de vida de desarrolador: despliegue el menu ayuda, seleccione la 
-opción "Desarrollador" y se abrirá el pdf correspondiente.
+opción "Desarrollador" y se abrirá el pdf correspondiente. Para que esta función 
+se ejecute correctamnete, debe tener instalado una aplicación de visualización 
+de pdf en su equipo
 
 -Ver instrucciones: presione el boton azul ubicado arriba a la derecha de la
 pantall. Se despliega una ventana con instrucciones cortas.
