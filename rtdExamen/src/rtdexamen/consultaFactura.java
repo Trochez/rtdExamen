@@ -22,10 +22,11 @@ import java.util.Date;
 public class consultaFactura {
     
     //variables de objeto de consulta
-    private String url = "";
-    private Date fechaInicial = null;
-    private Date fechaFinal = null;
-    private String id = "";
+    String url = "";
+    Date fechaInicial = null;
+    Date fechaFinal = null;
+    String id = "";
+    String resultado = "";
     
     //Formato fecha de consulta
     private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -102,7 +103,7 @@ public class consultaFactura {
                 id+"&start="+
                 df.format(fechaInicial)+"&finish="+
                 df.format(fechaFinal);
-                                
+                                                
         try {
             
             //Crea objeto url
@@ -173,7 +174,8 @@ public class consultaFactura {
         }
         
         //Retorna respuesta
-        return response.toString();
+        resultado = response.toString();
+        return resultado;
         
     }
     

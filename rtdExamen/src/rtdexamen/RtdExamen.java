@@ -24,8 +24,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-//import javafx.scene.control.Alert;
-//import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -49,42 +49,60 @@ public class RtdExamen extends Application implements Initializable{
     Pane pane;
     
     @FXML
-    RadioButton total = new RadioButton();
+    RadioButton total;
     
     @FXML
-    RadioButton fechas = new RadioButton();
+    RadioButton fechas;
     
     @FXML
-    ToggleGroup group = new ToggleGroup();
+    ToggleGroup group;
     
     @FXML
-    TextField id = new TextField();
+    TextField id;
     
     @FXML
-    DatePicker fechaInicial = new DatePicker();
+    DatePicker fechaInicial;
     
     @FXML
-    DatePicker fechaFinal = new DatePicker();
+    DatePicker fechaFinal;
     
     @FXML
-    Label resultado = new Label();
+    Label resultado;
     
     @FXML
-    Label resultadoConsulta = new Label();
+    Label resultadoConsulta;
         
     private Scene scene;
     
-    //private Alert alert = new Alert(AlertType.INFORMATION);
+    private Alert alert;
     
     //Objeto mediante el que se consultan el número de facturas
     private consultaFactura cf = new consultaFactura();
     
     //Se define la base del url de consulta
-    private final String url = "http://34.209.24.195/facturas?";
+    String url = "http://34.209.24.195/facturas?";
     
     //Se definie el formato fecha que requiere el servicio web
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     
+    //Variables fecha
+    String start = "";
+    String finish = "";
+    
+    //Variable id
+    String idConsulta = "";
+    
+    //Variables resultado
+    int consulta = 0,numconsultas = 0;
+    
+    //variable para guardar tamaño inicial de ventana emergente
+    double alertsize = 0;
+    
+    //Variables de testing (TDD)
+    Boolean noId=false,errorOrdenFechas=false,errorUrl=false;
+    
+    //Bandera de testiong (Desactiva funciones gráficas para hacer testing)
+    Boolean test = false;
     
     //Clase para la construcción de interfaz gráfica
     @Override
@@ -123,6 +141,12 @@ public class RtdExamen extends Application implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
+        //Inicializa ventana emergente
+        alert = new Alert(AlertType.INFORMATION);
+        
+        //Guarda tamaño inicial
+        alertsize = alert.getDialogPane().getMinHeight();
+        
         //Inicialmente los campos de selección de fecha estan desactivados
         desactiveDate();
         
@@ -138,8 +162,7 @@ public class RtdExamen extends Application implements Initializable{
     //Metodo para desplegar ventana emergente de instrucciones rápidas
     public void openInstruction(){
         
-        /*alert.getDialogPane().setMinHeight(300);
-        
+        alert.getDialogPane().setMinHeight(300);
         alert.setTitle("Intrucciones Rapidas");
         alert.setHeaderText("Consulta de número de facturas");
         alert.setContentText("Esta aplicación permita realizar dos tipos de consultas: \n\n"
@@ -147,39 +170,57 @@ public class RtdExamen extends Application implements Initializable{
                 + "2) consultar facturas entre fechas: seleccione rango de fechas, digite un id, seleccione fecha inicial y fecha final"
                 + "en los campos con estos nombres y presione buscar\n");
         
-        alert.showAndWait();*/
+        alert.showAndWait();
         
     }
     
     //Metodo de consulta de facturas
     public void buscar(){
         
-        //Notificación de espera
-        /*alert.setTitle("Espere");
-        alert.setHeaderText("Consulta de resultados");
-        alert.setContentText("Presione OK y espere que termine la consulta");
-        alert.showAndWait();
-        */
+        //Reinicio banderas de testing
+        noId=false;
+        errorOrdenFechas=false;
+        errorUrl = false;
+        
+        if(!test){
+            //Notificación de espera
+            alert.getDialogPane().setMinHeight(alertsize);
+            alert.setTitle("Espere");
+            alert.setHeaderText("Consulta de resultados");
+            alert.setContentText("Presione OK y espere que termine la consulta");
+            alert.showAndWait();
+        }
+        
+        
         //Define el url base en el objeto consulta y verifica que no esté vació
         if(!cf.setUrl(url)){
-            /*alert.setTitle("Error URL");
-            alert.setHeaderText("Dirección vacía");
-            alert.setContentText("La dirección url está vacía");
-            alert.showAndWait();*/
+            
+            errorUrl = true;
+            
+            if(!test){
+                alert.getDialogPane().setMinHeight(alertsize);
+                alert.setTitle("Error URL");
+                alert.setHeaderText("Dirección vacía");
+                alert.setContentText("La dirección url está vacía");
+                alert.showAndWait();
+            }
+            
             return;
         }
         
-        String start = "";
-        String finish = "";
-        
-        //Verificación de que los campos fechas no esten vacío y transformación de
-        //los mismos en cadenas de texto en el formato definido al inicio de la clase
-        if(fechaInicial.getValue()!=null)start = dateFormat.format(Date.from(fechaInicial.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        if(fechaFinal.getValue()!=null)finish = dateFormat.format(Date.from(fechaFinal.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        
-        //Se obtiene el id digitado
-        String idConsulta = id.getText();
-        
+        if(!test){
+            //Se obtiene el id digitado
+            idConsulta = id.getText();
+            
+            //Verificación de que los campos fechas no esten vacío y transformación de
+            //los mismos en cadenas de texto en el formato definido al inicio de la clase
+            if(fechaInicial.getValue()!=null)start = dateFormat.format(Date.from(fechaInicial.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            else start = "";
+            if(fechaFinal.getValue()!=null)finish = dateFormat.format(Date.from(fechaFinal.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            else finish = "";
+            
+        }
+            
         //Verifica si se digito fecha inicial, de lo contrario asigna el 1 de enero del 2017 como fecha inical
         if(start.isEmpty()){
             start = "2017-01-01";
@@ -197,11 +238,15 @@ public class RtdExamen extends Application implements Initializable{
         
         //verifica si el ID de busqueda está vacío, si es asi informa este hecho y aborta el proceso
         if(idConsulta.isEmpty()){
-        
-            /*alert.setTitle("ID faltante");
-            alert.setHeaderText("Falta de parámetros");
-            alert.setContentText("Digite un ID para realizar la consulta");
-            alert.showAndWait();*/
+            noId = true;
+            if(!test){
+                alert.getDialogPane().setMinHeight(alertsize);
+                alert.setTitle("ID faltante");
+                alert.setHeaderText("Falta de parámetros");
+                alert.setContentText("Digite un ID para realizar la consulta");
+                alert.showAndWait();
+            }
+            
             return;
         }
                 
@@ -221,10 +266,16 @@ public class RtdExamen extends Application implements Initializable{
         
         //Verifica que la fecha inicial no sea después de la final, si es asi lo informa y aborta la consulta
         if(initial.after(end)){
-            /*alert.setTitle("Error en fechas");
-            alert.setHeaderText("Fechas incorrectas");
-            alert.setContentText("La fecha final debe ser mayor a la inicial");
-            alert.showAndWait();*/
+            errorOrdenFechas = true;
+            
+            if(!test){
+                alert.getDialogPane().setMinHeight(alertsize);
+                alert.setTitle("Error en fechas");
+                alert.setHeaderText("Fechas incorrectas");
+                alert.setContentText("La fecha final debe ser mayor a la inicial");
+                alert.showAndWait();
+            }
+            
             return;
         }
         
@@ -323,10 +374,14 @@ public class RtdExamen extends Application implements Initializable{
                
                //Si la variable de bucle infinito es mayor a 100 aborta operación y notifica
                if(watchdog>100){
-                   /*alert.setTitle("Error");
-                    alert.setHeaderText("Error calculando facturas");
-                    alert.setContentText("El número de conexiónes supera 100 intentos");
-                    alert.showAndWait();*/
+                    if(!test){
+                        alert.getDialogPane().setMinHeight(alertsize);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Error calculando facturas");
+                        alert.setContentText("El número de conexiónes supera 100 intentos");
+                        alert.showAndWait();
+                    }
+                    
                     return;
                }
             }
@@ -407,10 +462,14 @@ public class RtdExamen extends Application implements Initializable{
                  
                  //Si la variable de bucle infinito es mayor a 400 aborta operación y notifica
                if(watchdog>400){
-                   /*alert.setTitle("Error");
-                    alert.setHeaderText("Error calculando facturas");
-                    alert.setContentText("El número de conexiónes supera 100 intentos");
-                    alert.showAndWait();*/
+                    if(!test){
+                        alert.getDialogPane().setMinHeight(alertsize);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Error calculando facturas");
+                        alert.setContentText("El número de conexiónes supera 100 intentos");
+                        alert.showAndWait();
+                    }
+                    
                     return;
                }
                
@@ -418,10 +477,16 @@ public class RtdExamen extends Application implements Initializable{
             
         }
         
-        //Plasma los resultados en la interfaz gráfica
-        resultado.setText(String.valueOf(cuenta));
-        resultadoConsulta.setText(String.valueOf(consultas));
-        	
+        //Asigna resultado en variables resultado
+        consulta = cuenta;
+        numconsultas = consultas;
+        
+        if(!test){
+            //Plasma los resultados en la interfaz gráfica
+            resultado.setText(String.valueOf(cuenta));
+            resultadoConsulta.setText(String.valueOf(consultas));
+        }
+        
     }
     
     //función para exportar resultados en un rchivo de texto
@@ -434,10 +499,11 @@ public class RtdExamen extends Application implements Initializable{
         
         //Si el número de facturas o el número de consultas o el id están vacíos notifica y aborta operación
         if(numeroFacturas.isEmpty() || idCliente.isEmpty() || numeroConsultas.isEmpty()){
-            /*alert.setTitle("Consulta vacía");
+            alert.getDialogPane().setMinHeight(alertsize);
+            alert.setTitle("Consulta vacía");
             alert.setHeaderText("Exportar resultado");
             alert.setContentText("Debe de realizar una consulta antes de exportar un resultado");
-            alert.showAndWait();*/
+            alert.showAndWait();
             return;
         }
         
@@ -449,10 +515,15 @@ public class RtdExamen extends Application implements Initializable{
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("TXT","*.txt"));
         
         File file = fileChooser.showSaveDialog(stage);
-        file = new File(file.getAbsolutePath()+".txt");
+        
+        //Se elimina extensión .txt que se coloca por defecto en linux pero no en windows
+        //confirmando que la extensión sea .txt
+        file = new File(file.getAbsolutePath().replace(".txt", "")+".txt");
         
         //Define cadena de texto a exportar
-        String text = "ID: "+idCliente+"\nNúmero de Facturas: "+numeroFacturas+"\nNúmero de consultas: "+numeroConsultas;
+        String text = "ID: "+idCliente+
+                "\nNúmero de Facturas: "+numeroFacturas+
+                "\nNúmero de consultas: "+numeroConsultas;
         
         //imprime resultado en archivo 
         try (PrintWriter out = new PrintWriter(file.getAbsolutePath())) {
