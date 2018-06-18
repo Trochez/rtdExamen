@@ -110,10 +110,6 @@ public class RtdExamen extends Application implements Initializable{
         
         try {
             
-            Package pack = getClass().getPackage();
-            String packageName = pack.getName();
-            System.out.println("Package Name = " + packageName);
-            
             //Se carga la interfaz gráfica desde el archivo llamada gui0fxml
             pane = FXMLLoader.load(getClass().getResource("fxml/gui.fxml"));
             
@@ -166,7 +162,7 @@ public class RtdExamen extends Application implements Initializable{
         alert.setTitle("Intrucciones Rapidas");
         alert.setHeaderText("Consulta de número de facturas");
         alert.setContentText("Esta aplicación permita realizar dos tipos de consultas: \n\n"
-                + " 1) Consultar las facturas totales: seleccione totales, digite un id y presione buscar.\n\n"
+                + " 1) Consultar las facturas totales: seleccione 2017, digite un id y presione buscar.\n\n"
                 + "2) consultar facturas entre fechas: seleccione rango de fechas, digite un id, seleccione fecha inicial y fecha final"
                 + "en los campos con estos nombres y presione buscar\n");
         
@@ -187,7 +183,7 @@ public class RtdExamen extends Application implements Initializable{
             alert.getDialogPane().setMinHeight(alertsize);
             alert.setTitle("Espere");
             alert.setHeaderText("Consulta de resultados");
-            alert.setContentText("Presione OK y espere que termine la consulta");
+            alert.setContentText("Presione aceptar y espere que termine la consulta");
             alert.showAndWait();
         }
         
@@ -502,7 +498,7 @@ public class RtdExamen extends Application implements Initializable{
             alert.getDialogPane().setMinHeight(alertsize);
             alert.setTitle("Consulta vacía");
             alert.setHeaderText("Exportar resultado");
-            alert.setContentText("Debe de realizar una consulta antes de exportar un resultado");
+            alert.setContentText("Debe realizar una consulta antes de exportar un resultado");
             alert.showAndWait();
             return;
         }
@@ -522,8 +518,8 @@ public class RtdExamen extends Application implements Initializable{
         
         //Define cadena de texto a exportar
         String text = "ID: "+idCliente+
-                "\nNúmero de Facturas: "+numeroFacturas+
-                "\nNúmero de consultas: "+numeroConsultas;
+                "\r\nNúmero de Facturas: "+numeroFacturas+
+                "\r\nNúmero de consultas: "+numeroConsultas;
         
         //imprime resultado en archivo 
         try (PrintWriter out = new PrintWriter(file.getAbsolutePath())) {
