@@ -6,7 +6,7 @@ de resuelve tu deuda en código JAVA.
 
 En se en encontraran:
 - Folder de proyecto en Entorno de desarrollo NetBeans.
-- Folder con Archivos java desarrollados
+- Folder con Archivos java desarrollados incluyendo los archiuvos de testing TDD
 - Folder zip con archivos de ejecución.
 
 Para ejecutar el codigo correctamente se requiere tener instalado
