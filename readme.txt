@@ -18,6 +18,15 @@ rtdExamen.jar
 
 ------------------------------------Instrucciones------------------------------
 
+Para correr la aplicación, se debe descomprimir la carpeta zip RtdExamen.zip y
+ejecutar presionando doble click sobre el archivo con extensión jar ubicado en 
+la carpeta descomprimida. 
+
+Por consola de comandos debe ubicarse dentro de la carpeta descomprimida y 
+ejecutar la sintaxis java -jar nombredelarchivojar.jar
+
+Recuerde que esta aplicación requiere una versión mínima java instalada.
+
 Esta aplicación permite realizar varias tareas:
 
 -Consultar factueas del 2017: digite el id a consultar, asegurese de tener
