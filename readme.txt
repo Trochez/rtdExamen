@@ -8,6 +8,7 @@ En él se encontraran:
 - Folder de proyecto en Entorno de desarrollo NetBeans (rtdExamen).
 - Folder con Archivos java desarrollados incluyendo los archiuvos de testing TDD(Fuente).
 - Folder zip con archivos de ejecución (RtdExamen.zip).
+- Folder con pantallazo de resulotados cumplidos en pruebas TDD (resultadosTDD).
 
 Para ejecutar el codigo correctamente se requiere tener instalado
 un entorno java versión 1.8.0_111 o mayor
